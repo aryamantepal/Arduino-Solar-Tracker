@@ -88,10 +88,11 @@ int servovertLimitLow = 1;
 
 void setup()
 {
+  Serial.begin(115200);
   horizontal.attach(SERV01);
   vertical.attach(SERV02);
-  // horizontal.write(180);
-  // vertical.write(45);
+  horizontal.write(servohori); //start position
+  vertical.write(serovert);
   delay(2500);
 }
 
@@ -101,9 +102,15 @@ void loop()
   int rt = analogRead(ldrrt); // Top right
   int ld = analogRead(ldrld); // Bottom left
   int rd = analogRead(ldrrd); // Bottom right
+  //debug statements
+  Serial.print("LT: ", lt);
+  Serial.print("LT: ", rt);
+  Serial.print("LT: ", ld);
+  Serial.print("LT: ", rd);
 
-  int dtime = 10;
+  int dtime = 100; //increase the delay to give more time for readings
   int tol = 500; // Tolerance value for adjustment
+  int noMovement = 10; //if the difference is smaller than this, don't move
 
   int avt = (lt + rt) / 2; // Average value of top sensors
   int avd = (ld + rd) / 2; // Average value of bottom sensors
@@ -112,7 +119,27 @@ void loop()
 
   int dvert = avt - avd;  // Difference between top and bottom
   int dhoriz = avl - avr; // Difference between left and right
+  //add step size to smooth rotations
+  int step=1;
+  
+  if(abs(dvert) > noMovement && abs(dvert) > tol){
+    if(avt > avd){
+      serovert = min(servovert + step, servovertLimitHigh);
+    } else {
+      serovert = max(serovert - step, servovertLimitLow);
+    }
+    vertical.write(serovert);
+  }
 
+  if(abs(dhoriz) > noMovement && abs(dhoriz) > tol){
+    if(avl > avr){
+      servohori = min(servohori + step, servohoriLimitLow);
+    } else {
+      servohori = max(servohori - step, servohoriLimitHigh);
+    }
+    horizontal.write(servohori);
+  }
+  /* 
   if (abs(dvert) > tol)
   {
     if (avt > avd)
@@ -145,7 +172,7 @@ void loop()
         servohori = servohoriLimitHigh;
     }
     horizontal.write(servohori);
-  }
+  } */
 
   delay(dtime);
 }
