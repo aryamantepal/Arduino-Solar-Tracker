@@ -10,8 +10,8 @@ SSD1306Wire lcd(0x3c, SDA, SCL);
 Servo myservo;
 
 const int HOME_ANGLE = 0;
-const int ACTIVE_ANGLE = 50;
-const int LIGHT_THRESHOLD = 300;
+const int ACTIVE_ANGLE = 150;
+const int LIGHT_THRESHOLD = 400;
 int currentAngle = HOME_ANGLE;
 bool isLightDetected = false;
 
