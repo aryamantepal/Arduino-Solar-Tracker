@@ -92,7 +92,7 @@ void setup()
   horizontal.attach(SERV01);
   vertical.attach(SERV02);
   horizontal.write(servohori); //start position
-  vertical.write(serovert);
+  vertical.write(servovert);
   delay(2500);
 }
 
@@ -103,14 +103,14 @@ void loop()
   int ld = analogRead(ldrld); // Bottom left
   int rd = analogRead(ldrrd); // Bottom right
   //debug statements
-  Serial.print("LT: ", lt);
+ /*  Serial.print("LT: ", lt);
   Serial.print("LT: ", rt);
   Serial.print("LT: ", ld);
-  Serial.print("LT: ", rd);
+  Serial.print("LT: ", rd); */
 
   int dtime = 100; //increase the delay to give more time for readings
-  int tol = 500; // Tolerance value for adjustment
-  int noMovement = 10; //if the difference is smaller than this, don't move
+  int tol = 400; // Tolerance value for adjustment
+  int noMovement = 5; //if the difference is smaller than this, don't move
 
   int avt = (lt + rt) / 2; // Average value of top sensors
   int avd = (ld + rd) / 2; // Average value of bottom sensors
@@ -120,22 +120,22 @@ void loop()
   int dvert = avt - avd;  // Difference between top and bottom
   int dhoriz = avl - avr; // Difference between left and right
   //add step size to smooth rotations
-  int step=1;
+ // int step=10;
   
   if(abs(dvert) > noMovement && abs(dvert) > tol){
     if(avt > avd){
-      serovert = min(servovert + step, servovertLimitHigh);
+      servovert = min(servovert /* + step */, servovertLimitHigh);
     } else {
-      serovert = max(serovert - step, servovertLimitLow);
+      servovert = max(servovert /* - step */, servovertLimitLow);
     }
-    vertical.write(serovert);
+    vertical.write(servovert);
   }
 
   if(abs(dhoriz) > noMovement && abs(dhoriz) > tol){
     if(avl > avr){
-      servohori = min(servohori + step, servohoriLimitLow);
+      servohori = min(servohori /* + step */, servohoriLimitHigh);
     } else {
-      servohori = max(servohori - step, servohoriLimitHigh);
+      servohori = max(servohori/*  - step */, servohoriLimitLow);
     }
     horizontal.write(servohori);
   }
