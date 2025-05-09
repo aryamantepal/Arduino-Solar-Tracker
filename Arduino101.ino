@@ -170,9 +170,11 @@ SSD1306Wire lcd(0x3c, SDA, SCL);
 #define LDR_TR A15
 
 // Servo Pins
-#define SERVO_HORIZ 23
-#define SERVO_VERT 18
+// #define SERVO_HORIZ 23
+// #define SERVO_VERT 18
 
+#define SERVO_HORIZ 18
+#define SERVO_VERT 23
 // Servo limits
 int servoH = 90;
 int servoV = 45;
@@ -184,7 +186,7 @@ const int VERT_MAX = 100;
 // Movement config
 const int TOLERANCE = 50;        // Light imbalance required to move
 const int LIGHT_THRESHOLD = 400; // Ignore below this average light
-const int MOVE_STEP = 3;         // Degrees to move per loop
+const int MOVE_STEP = 1;         // Degrees to move per loop
 
 // Smoothing config
 const int SMOOTH_WINDOW = 5;
