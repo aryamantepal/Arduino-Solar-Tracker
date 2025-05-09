@@ -157,6 +157,22 @@
 //     delay(dtime);
 // }
 
+#include <WiFi.h> // header we need to include for WiFi functions
+#include <WebServer.h>
+
+const char* ssid = "Totoro_WiFi"; // Change this to sth. unique to you!
+const char* pass = "cics290m";
+WebServer server(80);  // define server object, at port 80
+
+void on_home() {
+  server.send(200, "text/html", "<h1>Hello World!</h1>");
+}
+
+
+
+
+
+
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include <SSD1306Wire.h>
@@ -199,6 +215,13 @@ Servo vertical;
 
 void setup()
 {
+  WiFi.mode(WIFI_AP); // start ESP in AP mode
+  WiFi.softAP(ssid, pass); // configure ssid and (optionally) password 
+  server.on("/", on_home);  // home callback function
+  
+
+  server.begin();  // starts server
+
     Serial.begin(9600);
 
     horizontal.attach(SERVO_HORIZ);
@@ -227,7 +250,8 @@ int smooth(int *buffer, int newValue)
 }
 
 void loop()
-{
+{ 
+  server.handleClient();  // handle client requests, must call frequently
     // Read and smooth each LDR
     int tlRaw = analogRead(LDR_TL);
     int trRaw = analogRead(LDR_TR);
@@ -292,5 +316,13 @@ void loop()
     lcd.drawString(0, 45, lightDetected ? "LIGHT ON" : "LIGHT OFF");
 
     lcd.display();
+
+    
+    String msg = "TL: " + String(tl) + " TR: " + String(tr);
+    // server.println(msg);
+    // server.print
+    server.on("/inline", [](){
+      server.send(200, "text/html", "<p>hello TL <var>tl</var> </p> ");
+    }); 
     delay(100);
 }
