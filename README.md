@@ -41,10 +41,15 @@ ESP32Servo
 
 SSD1306Wire
 
-Install these libraries via PlatformIO or the Arduino Library Manager.
+To use the libraries, include this line in your platformio.ini file
+```
+lib_deps =
+  madhephaestus/ESP32Servo
+  https://github.com/ThingPulse/esp8266-oled-ssd1306/archive/refs/tags/4.6.1.zip
+```
 
 #### Demo
-Add images or videos of your setup here.
+https://drive.google.com/file/d/1GBvWDiPYHOSNjy22GcJ6dnhQWcrdieUk/view?usp=sharing
 
 ✅ Future Improvements
 Add low-pass filter instead of fixed-size buffer for smoothing
